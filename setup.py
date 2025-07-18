@@ -3,8 +3,9 @@
 Setup script for Sigma to Sumo Logic CSE Converter
 """
 
-from setuptools import setup, find_packages
 import os
+
+from setuptools import find_packages, setup
 
 
 # Read README for long description

@@ -3,23 +3,23 @@
 Unit tests for the Sigma to Sumo Logic CSE Converter
 """
 
-import unittest
 import json
-import tempfile
 import os
-from pathlib import Path
 import sys
+import tempfile
+import unittest
+from pathlib import Path
 
 # Add the parent directory to the path to import the main module
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
 from sigma_sumo_converter import (
-    SigmaToSumoConverter,
-    FieldMapper,
-    DetectionLogicTranslator,
-    MetadataMapper,
-    LogSourceMapper,
     ConversionResult,
+    DetectionLogicTranslator,
+    FieldMapper,
+    LogSourceMapper,
+    MetadataMapper,
+    SigmaToSumoConverter,
 )
 
 
@@ -314,8 +314,8 @@ logsource:
 detection:
     selection_img:
         Image|endswith:
-            - '\powershell.exe'
-            - '\pwsh.exe'
+            - '\\powershell.exe'
+            - '\\pwsh.exe'
     selection_cli:
         CommandLine|contains:
             - 'Invoke-Expression'

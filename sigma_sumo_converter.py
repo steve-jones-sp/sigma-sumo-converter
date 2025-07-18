@@ -2,12 +2,16 @@
 """
 Sigma to Sumo Logic CSE Rule Converter v1.0.0
 
-This tool converts Sigma detection rules (YAML format) to Sumo Logic CSE rules (JSON format).
-It handles field mapping to normalized schema, detection logic translation, and metadata conversion.
-Uses separate JSON mapping files based on official Sigma taxonomy.
+This tool converts Sigma detection rules (YAML format) to Sumo Logic CSE rules.
+It handles field mapping to normalized schema, detection logic translation,
+and metadata conversion using separate JSON mapping files.
 """
 
-print("🔧 Script starting...")
+import argparse
+import json
+from dataclasses import dataclass
+from pathlib import Path
+from typing import Any, Dict, List, Optional, Union
 
 try:
     import yaml
@@ -18,15 +22,7 @@ except ImportError:
     HAS_YAML = False
     print("⚠️  PyYAML not available - using fallback parser")
 
-import json
-import re
-import os
-import argparse
-from pathlib import Path
-from typing import Dict, List, Any, Optional, Union
-from dataclasses import dataclass
-from datetime import datetime
-
+print("🔧 Script starting...")
 print("✅ All imports successful")
 
 
@@ -37,8 +33,8 @@ class ConversionResult:
     success: bool
     rule_json: Optional[Dict[str, Any]] = None
     api_json: Optional[Dict[str, Any]] = None
-    errors: List[str] = None
-    warnings: List[str] = None
+    errors: Optional[List[str]] = None  # Change from List[str] = None
+    warnings: Optional[List[str]] = None  # Change from List[str] = None
 
 
 class FieldMapper:
@@ -163,7 +159,9 @@ class FieldMapper:
             print(f"❌ Error loading mapping file {relative_path}: {str(e)}")
             return {}
 
-    def map_field(self, sigma_field: str, logsource: Dict[str, str] = None) -> str:
+    def map_field(
+        self, sigma_field: str, logsource: Optional[Dict[str, str]] = None
+    ) -> str:
         """Map a Sigma field to Sumo Logic CSE normalized field"""
         if logsource:
             mapping_data = self.get_mapping_for_logsource(logsource)
@@ -181,7 +179,7 @@ class DetectionLogicTranslator:
         self.field_mapper = field_mapper
         self.current_logsource = None
 
-    def set_logsource(self, logsource: Dict[str, str]):
+    def set_logsource(self, logsource: Dict[str, str]) -> None:
         """Set the current log source for field mapping"""
         self.current_logsource = logsource
 
@@ -467,11 +465,11 @@ class SimpleYAMLParser:
     @staticmethod
     def parse_simple_yaml(yaml_str: str) -> Dict[str, Any]:
         """Parse simple YAML structure (limited functionality)"""
-        result = {}
+        result: Dict[str, Any] = {}  # Add type annotation
         lines = yaml_str.strip().split("\n")
         current_key = None
         current_list = None
-        indent_stack = []
+        indent_stack: List[int] = []  # Reserved for future nested parsing
 
         for line in lines:
             if not line.strip() or line.strip().startswith("#"):
@@ -729,13 +727,13 @@ def main():
 Examples:
   # Convert a single file
   python3 sigma_sumo_converter.py -i suspicious_file.yml
-  
+
   # Convert a single file with custom output directory
   python3 sigma_sumo_converter.py -i suspicious_file.yml -o /path/to/output
-  
+
   # Convert all YAML files in a directory
   python3 sigma_sumo_converter.py -d /path/to/sigma/rules
-  
+
   # Convert directory with custom output location
   python3 sigma_sumo_converter.py -d /path/to/sigma/rules -o /path/to/output
         """,
