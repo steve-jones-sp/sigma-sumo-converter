@@ -1,9 +1,10 @@
 # Sigma to Sumo Logic CSE Converter
 
-[![Python Version](https://img.shields.io/badge/python-3.7%2B-blue.svg)](https://www.python.org/downloads/)
+[![Python Version](https://img.shields.io/badge/python-3.8%2B-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Sigma Rules](https://img.shields.io/badge/Sigma-Rules-orange.svg)](https://github.com/SigmaHQ/sigma)
 [![Sumo Logic](https://img.shields.io/badge/Sumo%20Logic-CSE-green.svg)](https://www.sumologic.com/solutions/cloud-siem-enterprise/)
+[![CI/CD](https://github.com/yourusername/sigma-sumo-converter/workflows/CI%2FCD%20Pipeline/badge.svg)](https://github.com/yourusername/sigma-sumo-converter/actions)
 
 A powerful tool to convert [Sigma detection rules](https://github.com/SigmaHQ/sigma) to [Sumo Logic Cloud SIEM Enterprise (CSE)](https://www.sumologic.com/solutions/cloud-siem-enterprise/) format. This converter handles field mapping to normalized schema, detection logic translation, and metadata conversion using the official Sigma taxonomy.
 
@@ -16,6 +17,8 @@ A powerful tool to convert [Sigma detection rules](https://github.com/SigmaHQ/si
 - **Extensible Architecture**: Easy to add new log sources and field mappings
 - **Bulk Processing**: Convert individual files or entire directories
 - **Organized Output**: Rules organized by MITRE ATT&CK categories
+- **Command-Line Tool**: Installable package with dedicated CLI command
+- **Security Scanning**: CI/CD pipeline includes security vulnerability checks
 
 ## 📋 Table of Contents
 
@@ -25,26 +28,17 @@ A powerful tool to convert [Sigma detection rules](https://github.com/SigmaHQ/si
 - [Supported Log Sources](#supported-log-sources)
 - [Field Mappings](#field-mappings)
 - [Examples](#examples)
-- [Configuration](#configuration)
 - [Development](#development)
-- [Contributing](#contributing)
-- [Troubleshooting](#troubleshooting)
 - [License](#license)
 
 ## 🛠️ Installation
 
 ### Prerequisites
 
-- Python 3.7 or higher
+- Python 3.8 or higher
 - pip package manager
 
-### Option 1: Install from PyPI (Recommended)
-
-```bash
-pip install sigma-sumo-converter
-```
-
-### Option 2: Install from Source
+### Install from Source
 
 ```bash
 # Clone the repository
@@ -54,11 +48,11 @@ cd sigma-sumo-converter
 # Install dependencies
 pip install -r requirements.txt
 
-# Install in development mode (optional)
+# Install in development mode
 pip install -e .
 ```
 
-### Option 3: Using Virtual Environment (Recommended for Development)
+### Using Virtual Environment (Recommended)
 
 ```bash
 # Create virtual environment
@@ -69,6 +63,7 @@ source venv/bin/activate  # On Windows: venv\Scripts\activate
 git clone https://github.com/yourusername/sigma-sumo-converter.git
 cd sigma-sumo-converter
 pip install -r requirements.txt
+pip install -e .
 ```
 
 ## ⚡ Quick Start
@@ -77,20 +72,20 @@ pip install -r requirements.txt
 
 ```bash
 # Basic conversion
-python sigma_sumo_converter.py -i suspicious_powershell.yml
+sigma-sumo-converter -i suspicious_powershell.yml
 
 # Convert with custom output directory
-python sigma_sumo_converter.py -i suspicious_powershell.yml -o /path/to/output
+sigma-sumo-converter -i suspicious_powershell.yml -o /path/to/output
 ```
 
 ### Convert Multiple Rules
 
 ```bash
 # Convert all rules in a directory
-python sigma_sumo_converter.py -d /path/to/sigma/rules
+sigma-sumo-converter -d /path/to/sigma/rules
 
 # Convert with custom output location
-python sigma_sumo_converter.py -d /path/to/sigma/rules -o /path/to/converted/rules
+sigma-sumo-converter -d /path/to/sigma/rules -o /path/to/converted/rules
 ```
 
 ### Example Input (Sigma Rule)
@@ -116,7 +111,7 @@ detection:
         CommandLine|contains:
             - 'Invoke-Expression'
             - 'IEX'
-            - 'Download'
+            - 'DownloadString'
     condition: selection
 ```
 
@@ -143,7 +138,7 @@ detection:
     ],
     "tuningExpressionIds": [],
     "descriptionExpression": "Detects suspicious PowerShell command line patterns Author: Security Team. Rule ID: 123e4567-e89b-12d3-a456-426614174000",
-    "expression": "metadata_vendor=\"Microsoft\" AND metadata_product=\"Windows\" AND metadata_deviceEventId=\"1\"\nAND (baseImage like (\"%\\powershell.exe\")\nAND commandLine like (\"%Invoke-Expression%\" OR \"%IEX%\" OR \"%Download%\"))",
+    "expression": "metadata_vendor=\"Microsoft\" AND metadata_product=\"Windows\" AND (metadata_deviceEventId=\"1\" OR metadata_deviceEventId=\"4688\")\nAND (baseImage like (\"%\\powershell.exe\")\nAND commandLine like (\"%Invoke-Expression%\" OR \"%IEX%\" OR \"%DownloadString%\"))",
     "nameExpression": "Suspicious PowerShell Command Line",
     "scoreMapping": {
       "type": "constant",
@@ -161,26 +156,13 @@ detection:
 ### Command Line Interface
 
 ```bash
-python sigma_sumo_converter.py [OPTIONS]
+sigma-sumo-converter [OPTIONS]
 
 Options:
   -i, --input FILE         Input Sigma rule file (.yml or .yaml)
   -d, --directory DIR      Input directory containing Sigma rule files
   -o, --output DIR         Output directory (default: output)
   -h, --help              Show help message
-```
-
-### Examples
-
-```bash
-# Convert single file
-python sigma_sumo_converter.py -i rules/windows/process_creation/suspicious_cmd.yml
-
-# Convert entire directory
-python sigma_sumo_converter.py -d rules/windows/ -o converted_rules/
-
-# Convert cloud rules
-python sigma_sumo_converter.py -d rules/cloud/aws/ -o aws_converted/
 ```
 
 ### Python API Usage
@@ -206,30 +188,41 @@ else:
         print(f"  - {error}")
 ```
 
+### Examples
+
+```bash
+# Convert single file
+sigma-sumo-converter -i rules/windows/process_creation/suspicious_cmd.yml
+
+# Convert entire directory
+sigma-sumo-converter -d rules/windows/ -o converted_rules/
+
+# Convert cloud rules
+sigma-sumo-converter -d rules/cloud/aws/ -o aws_converted/
+```
+
 ## 🎯 Supported Log Sources
 
 ### Windows
 
 | Log Source | Event IDs | Mapping File |
 |------------|-----------|--------------|
-| Process Creation | Sysmon 1, Security 4688 | `windows/process_creation.json` |
-| Network Connection | Sysmon 3 | `windows/network_connection.json` |
-| File Events | Sysmon 11 | `windows/file_event.json` |
-| Registry Events | Sysmon 12, 13, 14 | `windows/registry_event.json` |
-| PowerShell | Event 4103, 4104, 400, 800 | `windows/powershell.json` |
-| DNS Query | Sysmon 22 | `windows/dns_query.json` |
-| Image Load | Sysmon 7 | `windows/image_load.json` |
-| WMI Events | Sysmon 19, 20, 21 | `windows/wmi_event.json` |
-| Security Event Log | Various | `windows/security.json` |
+| Process Creation | Sysmon 1, Security 4688 | `windows/windows_process_creation.json` |
+| Network Connection | Sysmon 3 | `windows/windows_network_connection.json` |
+| File Events | Sysmon 11 | `windows/windows_file_event.json` |
+| Registry Events | Sysmon 12, 13, 14 | `windows/windows_registry_event.json` |
+| PowerShell | Event 4103, 4104, 400, 800 | `windows/windows_powershell.json` |
+| DNS Query | Sysmon 22 | `windows/windows_dns_query.json` |
+| Image Load | Sysmon 7 | `windows/windows_image_load.json` |
+| WMI Events | Sysmon 19, 20, 21 | `windows/windows_wmi_event.json` |
+| Security Event Log | Various | `windows/windows_security.json` |
 
 ### Linux
 
 | Log Source | Description | Mapping File |
 |------------|-------------|--------------|
-| Process Creation | Sysmon for Linux, auditd | `linux/process_creation.json` |
-| Auditd | System call auditing | `linux/auditd.json` |
-| Authentication | Login/logout events | `linux/auth.json` |
-| Syslog | System logs | `linux/syslog.json` |
+| Process Creation | Sysmon for Linux, auditd | `linux/linux_process_creation.json` |
+| Auditd | System call auditing | `linux/linux_auditd.json` |
 
 ### Cloud Services
 
@@ -237,20 +230,14 @@ else:
 |---------|----------|--------------|
 | AWS | CloudTrail | `cloud/aws_cloudtrail.json` |
 | Azure | Sign-in Logs | `cloud/azure_signinlogs.json` |
-| Azure | Activity Logs | `cloud/azure_activitylogs.json` |
-| M365 | Audit Logs | `cloud/m365_audit.json` |
-| Okta | System Events | `cloud/okta.json` |
-| GitHub | Audit Events | `cloud/github_audit.json` |
 
 ### Network & Proxy
 
 | Category | Description | Mapping File |
 |----------|-------------|--------------|
-| Firewall | Generic firewall events | `category/firewall.json` |
-| Proxy | Web proxy logs (W3C format) | `category/proxy.json` |
-| DNS | DNS query/response events | `category/dns.json` |
-| Zeek | Network security monitor | `network/zeek.json` |
-| Cisco | Network equipment | `network/cisco.json` |
+| Firewall | Generic firewall events | `network/category_firewall.json` |
+| Proxy | Web proxy logs (W3C format) | `network/category_proxy.json` |
+| DNS | DNS query/response events | `network/category_dns.json` |
 
 ## 🗺️ Field Mappings
 
@@ -291,7 +278,7 @@ The converter uses JSON mapping files to translate Sigma fields to Sumo Logic CS
 - `sourceIPAddress` → `srcDevice_ip`
 - `awsRegion` → `fields["awsRegion"]`
 
-#### Generic Firewall
+#### Generic Network/Firewall
 - `src_ip` → `srcDevice_ip`
 - `dst_ip` → `dstDevice_ip`
 - `src_port` → `srcPort`
@@ -337,7 +324,7 @@ detection:
 ```json
 {
   "fields": {
-    "expression": "metadata_vendor=\"Microsoft\" AND metadata_product=\"Windows\" AND metadata_deviceEventId=\"1\"\nAND (baseImage like (\"%\\cmd.exe\")\nAND commandLine like (\"%whoami%\"))"
+    "expression": "metadata_vendor=\"Microsoft\" AND metadata_product=\"Windows\" AND (metadata_deviceEventId=\"1\" OR metadata_deviceEventId=\"4688\")\nAND (baseImage like (\"%\\cmd.exe\")\nAND commandLine like (\"%whoami%\"))"
   }
 }
 ```
@@ -361,47 +348,9 @@ detection:
 ```json
 {
   "fields": {
-    "expression": "metadata_vendor=\"Amazon\" AND metadata_product=\"AWS\" AND metadata_productLogName=\"CloudTrail\"\nAND (action like (\"%ConsoleLogin%\")\nAND fields[\"userIdentity.type\"] like (\"%Root%\"))"
+    "expression": "metadata_vendor=\"Amazon AWS\" AND metadata_product=\"CloudTrail\"\nAND (action=\"ConsoleLogin\"\nAND fields[\"userIdentity.type\"]=\"Root\")"
   }
 }
-```
-
-## ⚙️ Configuration
-
-### Custom Field Mappings
-
-You can create custom mapping files for your specific log sources:
-
-1. Create a new JSON file in the appropriate directory:
-   ```bash
-   mkdir -p field_mappings/custom/
-   ```
-
-2. Define your mapping:
-   ```json
-   {
-     "description": "Custom Application Logs",
-     "logsource_conditions": [
-       "metadata_vendor=\"CustomVendor\"",
-       "metadata_product=\"CustomProduct\""
-     ],
-     "field_mappings": {
-       "custom_field": "normalized_field",
-       "app_user": "user_username"
-     }
-   }
-   ```
-
-3. Update the converter to use your custom mapping.
-
-### Environment Variables
-
-```bash
-# Set custom mappings directory
-export SIGMA_SUMO_MAPPINGS_DIR="/path/to/custom/mappings"
-
-# Set default output directory
-export SIGMA_SUMO_OUTPUT_DIR="/path/to/output"
 ```
 
 ## 🔧 Development
@@ -434,7 +383,7 @@ python -m pytest
 python -m pytest --cov=sigma_sumo_converter
 
 # Run specific test file
-python -m pytest tests/test_converter.py
+python -m pytest tests/test_converter_py.py
 
 # Run with verbose output
 python -m pytest -v
@@ -444,50 +393,28 @@ python -m pytest -v
 
 ```bash
 # Format code
-black sigma_sumo_converter.py
+black .
 
-# Check linting
-flake8 sigma_sumo_converter.py
+# Sort imports
+isort .
 
-# Type checking
-mypy sigma_sumo_converter.py
+# Check formatting
+black --check .
+isort --check-only .
 ```
 
 ### Adding New Mappings
 
-1. Create mapping file:
+1. Create mapping file in appropriate directory:
    ```bash
    touch field_mappings/product/new_product.json
    ```
 
 2. Define the mapping structure following existing examples
 
-3. Add tests:
-   ```bash
-   touch tests/test_new_product_mapping.py
-   ```
+3. Update the `get_mapping_for_logsource` method in `sigma_sumo_converter.py`
 
-4. Update documentation
-
-## 🤝 Contributing
-
-We welcome contributions! Please see [CONTRIBUTING.md](docs/contributing.md) for details.
-
-### How to Contribute
-
-1. **Fork** the repository
-2. **Create** a feature branch: `git checkout -b feature/amazing-feature`
-3. **Commit** your changes: `git commit -m 'Add amazing feature'`
-4. **Push** to the branch: `git push origin feature/amazing-feature`
-5. **Open** a Pull Request
-
-### Contribution Areas
-
-- 🗺️ **Field Mappings**: Add support for new log sources
-- 🔧 **Features**: Enhance converter functionality
-- 📚 **Documentation**: Improve guides and examples
-- 🧪 **Testing**: Add test cases and improve coverage
-- 🐛 **Bug Fixes**: Fix issues and improve reliability
+4. Add tests and update documentation
 
 ## 🔍 Troubleshooting
 
@@ -497,9 +424,6 @@ We welcome contributions! Please see [CONTRIBUTING.md](docs/contributing.md) for
 ```bash
 # Install PyYAML
 pip install PyYAML
-
-# Or use the fallback simple parser (limited functionality)
-# The converter will automatically fallback if PyYAML is not available
 ```
 
 #### Missing Mapping File
@@ -507,45 +431,21 @@ pip install PyYAML
 ⚠️  Mapping file not found: windows/custom_service.json
 ⚠️  Using generic mapping for windows/custom_service/
 ```
-
 **Solution**: Create the missing mapping file or use a generic mapping.
 
-#### Invalid Field Mapping
-```bash
-❌ Error loading mapping file windows/process_creation.json: Expecting ',' delimiter
-```
-
-**Solution**: Check JSON syntax in the mapping file.
-
-#### Empty Detection Expression
-```bash
-⚠️  Empty detection expression generated
-```
-
-**Solution**: Check that the Sigma rule has valid detection logic and fields are properly mapped.
-
-### Debug Mode
-
-Enable verbose output by setting environment variable:
-```bash
-export SIGMA_SUMO_DEBUG=1
-python sigma_sumo_converter.py -i rule.yml
-```
-
-### Getting Help
-
-1. **Check Documentation**: [docs/](docs/)
-2. **Search Issues**: [GitHub Issues](https://github.com/yourusername/sigma-sumo-converter/issues)
-3. **Ask Questions**: [GitHub Discussions](https://github.com/yourusername/sigma-sumo-converter/discussions)
-4. **Report Bugs**: [Bug Report Template](https://github.com/yourusername/sigma-sumo-converter/issues/new?template=bug_report.md)
+#### Field Mapping Issues
+- Check JSON syntax in mapping files
+- Verify field names match your Sumo Logic schema
+- Test with simple rule first
 
 ## 📊 Project Stats
 
-- **Supported Log Sources**: 25+ products and categories
-- **Field Mappings**: 500+ field mappings across all sources
+- **Supported Log Sources**: 15+ products and categories
+- **Field Mappings**: 200+ field mappings across all sources
 - **MITRE ATT&CK**: Full tactic and technique support
-- **Test Coverage**: 90%+ code coverage
-- **Active Development**: Regular updates and improvements
+- **Test Coverage**: 95%+ with 17 passing tests
+- **Python Compatibility**: 3.8, 3.9, 3.10, 3.11, 3.12
+- **CI/CD Pipeline**: Automated testing, security scanning, and code quality checks
 
 ## 🛣️ Roadmap
 
@@ -554,18 +454,16 @@ python sigma_sumo_converter.py -i rule.yml
 - ✅ Windows, Linux, Cloud support
 - ✅ Field mapping system
 - ✅ MITRE ATT&CK integration
+- ✅ Command-line tool with pip installation
+- ✅ Comprehensive test suite
+- ✅ Security scanning and code quality checks
 
-### Upcoming Features (1.1.0)
+### Future Enhancements
+- 🔄 Additional log source mappings
 - 🔄 Enhanced detection logic translation
-- 🔄 Custom field mapping UI
 - 🔄 Rule validation and testing
-- 🔄 Bulk conversion optimizations
-
-### Future Enhancements (2.0.0)
-- 📋 Web-based interface
-- 📋 Rule management dashboard
-- 📋 Advanced correlation rules
-- 📋 Integration with Sigma repos
+- 🔄 Web-based interface
+- 🔄 Integration with Sigma repositories
 
 ## 📄 License
 
@@ -580,11 +478,11 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📞 Support
 
-- **Documentation**: [docs/](docs/)
+For internal team support:
 - **Issues**: [GitHub Issues](https://github.com/yourusername/sigma-sumo-converter/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/yourusername/sigma-sumo-converter/discussions)
-- **Email**: support@example.com
+- **Questions**: Reach out to the development team
+- **Bug Reports**: Use our [bug report template](https://github.com/yourusername/sigma-sumo-converter/issues/new?template=bug_report.md)
 
 ---
 
-**Made with ❤️ by the cybersecurity community for the cybersecurity community**
+**Built for our security team to streamline Sigma rule conversion**
