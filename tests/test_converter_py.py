@@ -241,7 +241,7 @@ detection:
 
         expression = fields["expression"]
         self.assertIn('metadata_vendor="Amazon AWS"', expression)
-        self.assertIn("action like", expression)
+        self.assertIn("action=", expression)
 
     def test_file_conversion(self):
         """Test file-based conversion"""
