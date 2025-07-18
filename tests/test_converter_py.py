@@ -240,7 +240,7 @@ detection:
         self.assertEqual(fields["category"], "Persistence")
 
         expression = fields["expression"]
-        self.assertIn('metadata_vendor="Amazon"', expression)
+        self.assertIn('metadata_vendor="Amazon AWS"', expression)
         self.assertIn("action like", expression)
 
     def test_file_conversion(self):
