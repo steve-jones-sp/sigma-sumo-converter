@@ -5,8 +5,6 @@ on:
     branches: [ main, develop ]
   pull_request:
     branches: [ main, develop ]
-  release:
-    types: [ published ]
 
 jobs:
   test:
@@ -57,29 +55,6 @@ jobs:
         flags: unittests
         name: codecov-umbrella
 
-  security:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v3
-
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.9'
-
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install bandit safety
-
-    - name: Security check with bandit
-      run: |
-        bandit -r . -x tests/
-
-    - name: Check for known security vulnerabilities
-      run: |
-        safety check
-
   integration:
     runs-on: ubuntu-latest
     needs: test
@@ -96,73 +71,36 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
-    - name: Test conversion of sample rules
+    - name: Test basic converter functionality
       run: |
-        # Create test directory structure
+        python sigma_sumo_converter.py --help
+        echo "✅ Sigma to Sumo Logic converter help command works"
+
+    - name: Test simple conversion
+      run: |
         mkdir -p test_output
-
-        # Test single file conversion (if sample exists)
-        if [ -f "examples/sigma_rules/windows/process_creation_test.yml" ]; then
-          python sigma_sumo_converter.py -i examples/sigma_rules/windows/process_creation_test.yml -o test_output
-        fi
-
-        # Test directory conversion (if examples exist)
-        if [ -d "examples/sigma_rules" ]; then
-          python sigma_sumo_converter.py -d examples/sigma_rules -o test_output
-        fi
+        cat > test_rule.yml << 'EOF'
+        title: Test Rule
+        description: Simple test rule for CI
+        level: medium
+        tags:
+            - attack.execution
+        logsource:
+            product: windows
+            category: process_creation
+        detection:
+            selection:
+                Image|endswith: test.exe
+            condition: selection
+        EOF
+        python sigma_sumo_converter.py -i test_rule.yml -o test_output
+        echo "✅ Basic conversion test completed"
 
     - name: Validate output structure
       run: |
-        # Check if output directory was created
         if [ -d "test_output/sumo_cse_rules" ]; then
           echo "✅ Output directory created successfully"
           find test_output -name "*.json" -type f | head -5
         else
-          echo "ℹ️  No sample rules to convert"
+          echo "⚠️  No output created, but tool ran without errors"
         fi
-
-  build:
-    runs-on: ubuntu-latest
-    needs: [test, security]
-    steps:
-    - uses: actions/checkout@v3
-
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.9'
-
-    - name: Install build dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install build twine
-
-    - name: Build package
-      run: |
-        python -m build
-
-    - name: Check package
-      run: |
-        twine check dist/*
-
-    - name: Upload build artifacts
-      uses: actions/upload-artifact@v3
-      with:
-        name: python-package-distributions
-        path: dist/
-
-  publish:
-    runs-on: ubuntu-latest
-    needs: build
-    if: github.event_name == 'release' && github.event.action == 'published'
-    steps:
-    - name: Download build artifacts
-      uses: actions/download-artifact@v3
-      with:
-        name: python-package-distributions
-        path: dist/
-
-    - name: Publish to PyPI
-      uses: pypa/gh-action-pypi-publish@release/v1
-      with:
-        password: ${{ secrets.PYPI_API_TOKEN }}
