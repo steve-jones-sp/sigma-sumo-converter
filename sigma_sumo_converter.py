@@ -11,7 +11,7 @@ import argparse
 import json
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Dict, List, Optional, Tuple, Union
 
 try:
     import yaml
@@ -273,7 +273,7 @@ class DetectionLogicTranslator:
         # Join selections with AND and newlines
         return "\nAND ".join(selections) if selections else ""
 
-    def _parse_field_operator(self, field_spec: str) -> tuple[str, str]:
+    def _parse_field_operator(self, field_spec: str) -> Tuple[str, str]:  # type: ignore
         """Parse field specification like 'Image|endswith' into field and operator"""
         if "|" in field_spec:
             field, operator = field_spec.split("|", 1)
