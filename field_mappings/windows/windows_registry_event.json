@@ -1,0 +1,21 @@
+{
+  "description": "Windows Registry Events - Sysmon Event ID 12, 13, 14",
+  "logsource_conditions": [
+    "metadata_vendor=\"Microsoft\"",
+    "metadata_product=\"Windows\"",
+    "(metadata_deviceEventId=\"12\" OR metadata_deviceEventId=\"13\" OR metadata_deviceEventId=\"14\")"
+  ],
+  "field_mappings": {
+    "TargetObject": "fields[\"TargetObject\"]",
+    "Details": "fields[\"Details\"]",
+    "Image": "baseImage",
+    "ProcessId": "pid",
+    "ProcessGuid": "fields[\"ProcessGuid\"]",
+    "User": "user_username",
+    "EventType": "action",
+    "UtcTime": "timestamp",
+    "EventID": "metadata_deviceEventId",
+    "Computer": "device_hostname",
+    "ComputerName": "device_hostname"
+  }
+}

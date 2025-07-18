@@ -1,0 +1,32 @@
+{
+  "description": "Windows Image Load Events - Sysmon Event ID 7",
+  "logsource_conditions": [
+    "metadata_vendor=\"Microsoft\"",
+    "metadata_product=\"Windows\"",
+    "metadata_deviceEventId=\"7\""
+  ],
+  "field_mappings": {
+    "Image": "baseImage",
+    "ImageLoaded": "fields[\"ImageLoaded\"]",
+    "ProcessId": "pid",
+    "ProcessGuid": "fields[\"ProcessGuid\"]",
+    "User": "user_username",
+    "UtcTime": "timestamp",
+    "Hashes": "file_hash_sha256",
+    "MD5": "file_hash_md5",
+    "SHA1": "file_hash_sha1",
+    "SHA256": "file_hash_sha256",
+    "IMPHASH": "file_hash_imphash",
+    "Signed": "fields[\"Signed\"]",
+    "Signature": "fields[\"Signature\"]",
+    "SignatureStatus": "fields[\"SignatureStatus\"]",
+    "FileVersion": "fields[\"FileVersion\"]",
+    "Description": "fields[\"Description\"]",
+    "Product": "fields[\"Product\"]",
+    "Company": "fields[\"Company\"]",
+    "OriginalFileName": "fields[\"OriginalFileName\"]",
+    "EventID": "metadata_deviceEventId",
+    "Computer": "device_hostname",
+    "ComputerName": "device_hostname"
+  }
+}

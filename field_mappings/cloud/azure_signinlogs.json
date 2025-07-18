@@ -1,0 +1,43 @@
+{
+  "description": "Azure Active Directory Sign-in Logs",
+  "logsource_conditions": [
+    "metadata_vendor=\"Microsoft\"",
+    "metadata_product=\"Azure\"",
+    "metadata_productLogName=\"SigninLogs\""
+  ],
+  "field_mappings": {
+    "UserPrincipalName": "user_username",
+    "UserId": "user_userId",
+    "UserDisplayName": "user_username",
+    "AppDisplayName": "application",
+    "AppId": "fields[\"AppId\"]",
+    "ClientAppUsed": "fields[\"ClientAppUsed\"]",
+    "ConditionalAccessStatus": "fields[\"ConditionalAccessStatus\"]",
+    "CorrelationId": "fields[\"CorrelationId\"]",
+    "CreatedDateTime": "timestamp",
+    "DeviceDetail": "fields[\"DeviceDetail\"]",
+    "Id": "fields[\"Id\"]",
+    "IPAddress": "srcDevice_ip",
+    "IsInteractive": "fields[\"IsInteractive\"]",
+    "Location": "fields[\"Location\"]",
+    "MfaDetail": "fields[\"MfaDetail\"]",
+    "NetworkLocationDetails": "fields[\"NetworkLocationDetails\"]",
+    "OriginalRequestId": "fields[\"OriginalRequestId\"]",
+    "ProcessingTimeInMilliseconds": "fields[\"ProcessingTimeInMilliseconds\"]",
+    "RiskDetail": "fields[\"RiskDetail\"]",
+    "RiskLevelAggregated": "fields[\"RiskLevelAggregated\"]",
+    "RiskLevelDuringSignIn": "fields[\"RiskLevelDuringSignIn\"]",
+    "RiskState": "fields[\"RiskState\"]",
+    "ResourceDisplayName": "fields[\"ResourceDisplayName\"]",
+    "ResourceId": "fields[\"ResourceId\"]",
+    "Status": "fields[\"Status\"]",
+    "TokenIssuerName": "fields[\"TokenIssuerName\"]",
+    "TokenIssuerType": "fields[\"TokenIssuerType\"]",
+    "UserAgent": "http_userAgent",
+    "AuthenticationDetails": "fields[\"AuthenticationDetails\"]",
+    "AuthenticationMethodsUsed": "fields[\"AuthenticationMethodsUsed\"]",
+    "AuthenticationProcessingDetails": "fields[\"AuthenticationProcessingDetails\"]",
+    "AuthenticationRequirement": "fields[\"AuthenticationRequirement\"]",
+    "AuthenticationRequirementPolicies": "fields[\"AuthenticationRequirementPolicies\"]"
+  }
+}

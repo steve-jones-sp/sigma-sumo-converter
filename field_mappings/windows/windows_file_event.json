@@ -1,0 +1,25 @@
+{
+  "description": "Windows File Creation Events - Sysmon Event ID 11",
+  "logsource_conditions": [
+    "metadata_vendor=\"Microsoft\"",
+    "metadata_product=\"Windows\"",
+    "metadata_deviceEventId=\"11\""
+  ],
+  "field_mappings": {
+    "TargetFilename": "file_path",
+    "Image": "baseImage",
+    "ProcessId": "pid",
+    "ProcessGuid": "fields[\"ProcessGuid\"]",
+    "User": "user_username",
+    "CreationUtcTime": "timestamp",
+    "UtcTime": "timestamp",
+    "Hashes": "file_hash_sha256",
+    "MD5": "file_hash_md5",
+    "SHA1": "file_hash_sha1",
+    "SHA256": "file_hash_sha256",
+    "IMPHASH": "file_hash_imphash",
+    "EventID": "metadata_deviceEventId",
+    "Computer": "device_hostname",
+    "ComputerName": "device_hostname"
+  }
+}

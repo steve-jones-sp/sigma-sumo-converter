@@ -1,0 +1,33 @@
+{
+  "description": "Windows PowerShell Events - Event ID 4103, 4104, 400, 800",
+  "logsource_conditions": [
+    "metadata_vendor=\"Microsoft\"",
+    "metadata_product=\"Windows\"",
+    "(metadata_deviceEventId=\"4103\" OR metadata_deviceEventId=\"4104\" OR metadata_deviceEventId=\"400\" OR metadata_deviceEventId=\"800\")"
+  ],
+  "field_mappings": {
+    "ScriptBlockText": "commandLine",
+    "MessageData": "commandLine",
+    "HostApplication": "baseImage",
+    "HostName": "device_hostname",
+    "HostVersion": "fields[\"HostVersion\"]",
+    "EngineVersion": "fields[\"EngineVersion\"]",
+    "RunspaceId": "fields[\"RunspaceId\"]",
+    "PipelineId": "fields[\"PipelineId\"]",
+    "CommandName": "fields[\"CommandName\"]",
+    "CommandType": "fields[\"CommandType\"]",
+    "ScriptName": "fields[\"ScriptName\"]",
+    "CommandPath": "fields[\"CommandPath\"]",
+    "CommandLine": "commandLine",
+    "User": "user_username",
+    "UserID": "user_userId",
+    "Path": "file_path",
+    "MessageNumber": "fields[\"MessageNumber\"]",
+    "MessageTotal": "fields[\"MessageTotal\"]",
+    "ScriptBlockId": "fields[\"ScriptBlockId\"]",
+    "Level": "severity",
+    "EventID": "metadata_deviceEventId",
+    "Computer": "device_hostname",
+    "ComputerName": "device_hostname"
+  }
+}

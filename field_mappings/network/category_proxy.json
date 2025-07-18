@@ -1,0 +1,39 @@
+{
+  "description": "Generic Proxy Events - W3C Extended Log File Format fields",
+  "logsource_conditions": [
+    "metadata_category=\"proxy\""
+  ],
+  "field_mappings": {
+    "c-uri": "http_url",
+    "c-uri-extension": "fields[\"c-uri-extension\"]",
+    "c-uri-query": "http_url_queryString",
+    "c-uri-stem": "http_url_path",
+    "c-useragent": "http_userAgent",
+    "cs-bytes": "bytesOut",
+    "cs-cookie": "fields[\"cs-cookie\"]",
+    "cs-host": "http_hostname",
+    "cs-method": "http_method",
+    "r-dns": "http_hostname",
+    "cs-referrer": "http_referer",
+    "cs-version": "fields[\"cs-version\"]",
+    "sc-bytes": "bytesIn",
+    "sc-status": "http_response_statusCode",
+    "src_ip": "srcDevice_ip",
+    "dst_ip": "dstDevice_ip",
+    "c-ip": "srcDevice_ip",
+    "s-ip": "dstDevice_ip",
+    "s-port": "dstPort",
+    "time-taken": "fields[\"time-taken\"]",
+    "date": "fields[\"date\"]",
+    "time": "fields[\"time\"]",
+    "timestamp": "timestamp",
+    "username": "user_username",
+    "domain": "user_authDomain",
+    "action": "action",
+    "category": "fields[\"category\"]",
+    "threat": "fields[\"threat\"]",
+    "risk": "fields[\"risk\"]",
+    "policy": "fields[\"policy\"]",
+    "rule": "fields[\"rule\"]"
+  }
+}

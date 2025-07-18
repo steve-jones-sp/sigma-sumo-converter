@@ -1,0 +1,30 @@
+{
+  "description": "Windows Network Connection Events - Sysmon Event ID 3",
+  "logsource_conditions": [
+    "metadata_vendor=\"Microsoft\"",
+    "metadata_product=\"Windows\"",
+    "metadata_deviceEventId=\"3\""
+  ],
+  "field_mappings": {
+    "Image": "baseImage",
+    "ProcessId": "pid",
+    "ProcessGuid": "fields[\"ProcessGuid\"]",
+    "User": "user_username",
+    "Protocol": "ipProtocol",
+    "Initiated": "fields[\"Initiated\"]",
+    "SourceIsIpv6": "fields[\"SourceIsIpv6\"]",
+    "SourceIp": "srcDevice_ip",
+    "SourceHostname": "srcDevice_hostname",
+    "SourcePort": "srcPort",
+    "DestinationIsIpv6": "fields[\"DestinationIsIpv6\"]",
+    "DestinationIp": "dstDevice_ip",
+    "DestinationHostname": "dstDevice_hostname",
+    "DestinationPort": "dstPort",
+    "DestinationPortName": "dstPort_serviceName",
+    "UtcTime": "timestamp",
+    "EventID": "metadata_deviceEventId",
+    "Computer": "device_hostname",
+    "ComputerName": "device_hostname",
+    "Hostname": "device_hostname"
+  }
+}

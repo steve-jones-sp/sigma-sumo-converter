@@ -1,0 +1,7 @@
+# Core dependencies
+PyYAML>=6.0
+pathlib2>=2.3.7; python_version < "3.4"
+
+# Optional dependencies for enhanced functionality
+colorama>=0.4.4  # For colored console output
+click>=8.0.0     # For enhanced CLI (future enhancement)

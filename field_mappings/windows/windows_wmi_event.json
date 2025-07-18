@@ -1,0 +1,24 @@
+{
+  "description": "Windows WMI Events - Sysmon Event ID 19, 20, 21",
+  "logsource_conditions": [
+    "metadata_vendor=\"Microsoft\"",
+    "metadata_product=\"Windows\"",
+    "(metadata_deviceEventId=\"19\" OR metadata_deviceEventId=\"20\" OR metadata_deviceEventId=\"21\")"
+  ],
+  "field_mappings": {
+    "EventType": "action",
+    "UtcTime": "timestamp",
+    "Operation": "action",
+    "User": "user_username",
+    "EventNamespace": "fields[\"EventNamespace\"]",
+    "Name": "fields[\"Name\"]",
+    "Query": "fields[\"Query\"]",
+    "Type": "fields[\"Type\"]",
+    "Destination": "fields[\"Destination\"]",
+    "Consumer": "fields[\"Consumer\"]",
+    "Filter": "fields[\"Filter\"]",
+    "EventID": "metadata_deviceEventId",
+    "Computer": "device_hostname",
+    "ComputerName": "device_hostname"
+  }
+}

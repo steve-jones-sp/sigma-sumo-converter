@@ -1,0 +1,42 @@
+{
+  "description": "Generic Firewall Events - Various vendors and products",
+  "logsource_conditions": [
+    "metadata_category=\"firewall\""
+  ],
+  "field_mappings": {
+    "src_ip": "srcDevice_ip",
+    "src_port": "srcPort",
+    "dst_ip": "dstDevice_ip",
+    "dst_port": "dstPort",
+    "username": "user_username",
+    "action": "action",
+    "protocol": "ipProtocol",
+    "bytes": "bytesIn",
+    "bytes_in": "bytesIn",
+    "bytes_out": "bytesOut",
+    "packets": "packetsIn",
+    "packets_in": "packetsIn",
+    "packets_out": "packetsOut",
+    "duration": "fields[\"duration\"]",
+    "rule": "fields[\"rule\"]",
+    "rule_name": "fields[\"rule_name\"]",
+    "policy": "fields[\"policy\"]",
+    "interface_in": "fields[\"interface_in\"]",
+    "interface_out": "fields[\"interface_out\"]",
+    "zone_in": "fields[\"zone_in\"]",
+    "zone_out": "fields[\"zone_out\"]",
+    "nat_src_ip": "fields[\"nat_src_ip\"]",
+    "nat_src_port": "fields[\"nat_src_port\"]",
+    "nat_dst_ip": "fields[\"nat_dst_ip\"]",
+    "nat_dst_port": "fields[\"nat_dst_port\"]",
+    "application": "application",
+    "service": "fields[\"service\"]",
+    "category": "fields[\"category\"]",
+    "subcategory": "fields[\"subcategory\"]",
+    "threat": "fields[\"threat\"]",
+    "url_category": "fields[\"url_category\"]",
+    "device_name": "device_hostname",
+    "severity": "severity",
+    "log_type": "fields[\"log_type\"]"
+  }
+}

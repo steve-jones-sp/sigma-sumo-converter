@@ -1,0 +1,43 @@
+{
+  "description": "AWS CloudTrail Events - API calls and administrative actions",
+  "logsource_conditions": [
+    "metadata_vendor=\"Amazon AWS\"",
+    "metadata_product=\"CloudTrail\""
+  ],
+  "field_mappings": {
+    "eventName": "action",
+    "eventSource": "fields[\"eventSource\"]",
+    "eventTime": "timestamp",
+    "eventType": "fields[\"eventType\"]",
+    "eventVersion": "fields[\"eventVersion\"]",
+    "userIdentity.type": "fields[\"userIdentity.type\"]",
+    "userIdentity.principalId": "user_userId",
+    "userIdentity.arn": "user_username",
+    "userIdentity.accountId": "fields[\"userIdentity.accountId\"]",
+    "userIdentity.accessKeyId": "fields[\"userIdentity.accessKeyId\"]",
+    "userIdentity.userName": "user_username",
+    "userIdentity.sessionContext.sessionIssuer.type": "fields[\"userIdentity.sessionContext.sessionIssuer.type\"]",
+    "userIdentity.sessionContext.sessionIssuer.principalId": "fields[\"userIdentity.sessionContext.sessionIssuer.principalId\"]",
+    "userIdentity.sessionContext.sessionIssuer.arn": "fields[\"userIdentity.sessionContext.sessionIssuer.arn\"]",
+    "userIdentity.sessionContext.sessionIssuer.accountId": "fields[\"userIdentity.sessionContext.sessionIssuer.accountId\"]",
+    "userIdentity.sessionContext.sessionIssuer.userName": "fields[\"userIdentity.sessionContext.sessionIssuer.userName\"]",
+    "awsRegion": "fields[\"awsRegion\"]",
+    "sourceIPAddress": "srcDevice_ip",
+    "userAgent": "http_userAgent",
+    "requestParameters": "fields[\"requestParameters\"]",
+    "responseElements": "fields[\"responseElements\"]",
+    "requestID": "fields[\"requestID\"]",
+    "errorCode": "fields[\"errorCode\"]",
+    "errorMessage": "fields[\"errorMessage\"]",
+    "resources": "fields[\"resources\"]",
+    "recipientAccountId": "fields[\"recipientAccountId\"]",
+    "serviceEventDetails": "fields[\"serviceEventDetails\"]",
+    "sharedEventID": "fields[\"sharedEventID\"]",
+    "vpcEndpointId": "fields[\"vpcEndpointId\"]",
+    "eventCategory": "fields[\"eventCategory\"]",
+    "managementEvent": "fields[\"managementEvent\"]",
+    "readOnly": "fields[\"readOnly\"]",
+    "recipientAccountId": "fields[\"recipientAccountId\"]",
+    "apiVersion": "fields[\"apiVersion\"]"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "description": "Windows DNS Query Events - Sysmon Event ID 22",
+  "logsource_conditions": [
+    "metadata_vendor=\"Microsoft\"",
+    "metadata_product=\"Windows\"",
+    "metadata_deviceEventId=\"22\""
+  ],
+  "field_mappings": {
+    "QueryName": "dns_query",
+    "QueryType": "dns_queryType",
+    "QueryStatus": "dns_returnCode",
+    "QueryResults": "dns_reply",
+    "Image": "baseImage",
+    "ProcessId": "pid",
+    "ProcessGuid": "fields[\"ProcessGuid\"]",
+    "User": "user_username",
+    "UtcTime": "timestamp",
+    "EventID": "metadata_deviceEventId",
+    "Computer": "device_hostname",
+    "ComputerName": "device_hostname"
+  }
+}
