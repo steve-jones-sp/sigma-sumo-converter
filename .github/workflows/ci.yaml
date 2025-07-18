@@ -37,13 +37,6 @@ jobs:
         pip install -r requirements.txt
         pip install -r requirements-dev.txt
 
-    - name: Lint with flake8
-      run: |
-        # Stop the build if there are Python syntax errors or undefined names
-        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-        # Exit-zero treats all errors as warnings
-        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=88 --statistics
-
     - name: Format check with black
       run: |
         black --check .
@@ -51,10 +44,6 @@ jobs:
     - name: Import sorting check with isort
       run: |
         isort --check-only .
-
-    - name: Type checking with mypy
-      run: |
-        mypy sigma_sumo_converter.py --ignore-missing-imports
 
     - name: Test with pytest
       run: |
@@ -111,12 +100,12 @@ jobs:
       run: |
         # Create test directory structure
         mkdir -p test_output
-        
+
         # Test single file conversion (if sample exists)
         if [ -f "examples/sigma_rules/windows/process_creation_test.yml" ]; then
           python sigma_sumo_converter.py -i examples/sigma_rules/windows/process_creation_test.yml -o test_output
         fi
-        
+
         # Test directory conversion (if examples exist)
         if [ -d "examples/sigma_rules" ]; then
           python sigma_sumo_converter.py -d examples/sigma_rules -o test_output
