@@ -6,25 +6,30 @@ Setup script for Sigma to Sumo Logic CSE Converter
 from setuptools import setup, find_packages
 import os
 
+
 # Read README for long description
 def read_readme():
     """Read README.md file"""
     here = os.path.abspath(os.path.dirname(__file__))
     try:
-        with open(os.path.join(here, 'README.md'), encoding='utf-8') as f:
+        with open(os.path.join(here, "README.md"), encoding="utf-8") as f:
             return f.read()
     except FileNotFoundError:
         return "Sigma to Sumo Logic CSE Rule Converter"
+
 
 # Read requirements
 def read_requirements():
     """Read requirements.txt file"""
     here = os.path.abspath(os.path.dirname(__file__))
     try:
-        with open(os.path.join(here, 'requirements.txt'), encoding='utf-8') as f:
-            return [line.strip() for line in f if line.strip() and not line.startswith('#')]
+        with open(os.path.join(here, "requirements.txt"), encoding="utf-8") as f:
+            return [
+                line.strip() for line in f if line.strip() and not line.startswith("#")
+            ]
     except FileNotFoundError:
-        return ['PyYAML>=6.0']
+        return ["PyYAML>=6.0"]
+
 
 setup(
     name="sigma-sumo-converter",

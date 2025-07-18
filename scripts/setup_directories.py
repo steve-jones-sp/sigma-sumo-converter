@@ -12,11 +12,9 @@ def create_directory_structure():
     directories = [
         # GitHub integration
         ".github/workflows",
-        ".github/ISSUE_TEMPLATE", 
-        
+        ".github/ISSUE_TEMPLATE",
         # Documentation
         "docs",
-        
         # Field mappings (organized by Sigma taxonomy)
         "field_mappings/windows",
         "field_mappings/linux",
@@ -24,30 +22,27 @@ def create_directory_structure():
         "field_mappings/category",
         "field_mappings/network",
         "field_mappings/generic",
-        
         # Testing infrastructure
         "tests/fixtures/sample_rules",
         "tests/fixtures/expected_outputs",
-        
         # Examples
         "examples/sigma_rules/windows",
         "examples/sigma_rules/linux",
         "examples/sigma_rules/cloud",
         "examples/converted_rules/execution",
-        "examples/converted_rules/persistence", 
+        "examples/converted_rules/persistence",
         "examples/converted_rules/defense_evasion",
-        
         # Development tools
-        "scripts"
+        "scripts",
     ]
-    
+
     print("🚀 Creating Sigma to Sumo Logic CSE Converter directory structure...")
     print()
-    
+
     for directory in directories:
         Path(directory).mkdir(parents=True, exist_ok=True)
         print(f"✅ Created: {directory}")
-    
+
     print()
     print("📂 Directory structure created successfully!")
     print()
