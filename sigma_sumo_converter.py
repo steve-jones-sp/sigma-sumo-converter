@@ -534,7 +534,7 @@ class SigmaToSumoConverter:
         try:
             # Parse YAML
             if HAS_YAML:
-                sigma_rule = yaml.safe_load(sigma_yaml)
+                sigma_rule = yaml.safe_load(sigma_yaml)  # type: ignore
             else:
                 print(
                     "⚠️  PyYAML not found, using simple parser (limited functionality)"
@@ -653,7 +653,7 @@ class SigmaToSumoConverter:
                 return False
 
             # Get the category for directory structure
-            category = result.api_json["fields"]["category"]
+            category = result.api_json["fields"]["category"]  # type: ignore
 
             # Create category-based output directory
             category_dir = (

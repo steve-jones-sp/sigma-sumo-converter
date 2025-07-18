@@ -8,14 +8,15 @@
   "field_mappings": {
     "TargetObject": "fields[\"TargetObject\"]",
     "Details": "fields[\"Details\"]",
+    "EventType": "action",
     "Image": "baseImage",
     "ProcessId": "pid",
     "ProcessGuid": "fields[\"ProcessGuid\"]",
     "User": "user_username",
-    "EventType": "action",
     "UtcTime": "timestamp",
     "EventID": "metadata_deviceEventId",
     "Computer": "device_hostname",
-    "ComputerName": "device_hostname"
+    "ComputerName": "device_hostname",
+    "Hostname": "device_hostname"
   }
 }

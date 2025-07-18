@@ -1,0 +1,16 @@
+title: Test OR Logic
+id: 12345678-1234-1234-1234-123456789012
+description: Simple test for OR condition logic
+author: Test
+level: medium
+tags:
+    - attack.execution
+logsource:
+  product: windows
+  category: process_creation
+detection:
+  sel1:
+    Image|endswith: powershell.exe
+  sel2:
+    Image|endswith: cmd.exe
+  condition: sel1 or sel2
